@@ -1,10 +1,11 @@
-import numpy as np
 import pandas as pd
-from flask import Flask, request, render_template
+from flask import Flask, request, render_template , jsonify
 import pickle
 
 app = Flask(__name__)
-model = pickle.load(open('model.pkl', 'rb'))
+# Load your model (replace 'model.pkl' with your model file)
+with open('model.pkl', 'rb') as f:
+    model = pickle.load(f)
 
 @app.route('/')
 def home():
@@ -12,23 +13,25 @@ def home():
 
 @app.route('/predict',methods=['POST'])
 def predict():
-  input_features = [float(x) for x in request.form.values()]
-  features_value = [np.array(input_features)]
-
-  features_name = ['Pclass', 'Sex', 'Age', 'SibSp', 'Parch', 'Fare', 'Embarked']
-
-  df = pd.DataFrame(features_value, columns=features_name)
-  output = model.predict(df)
-  if output==1:
-      res_val = "The Survived"
-  else:
-      res_val = "The Did Not Survived"
-
+    data = request.json
+    print(data)
+    # Extract features from the request
+    features = [
+        data['Pclass'], data['Sex'],data['Age'], data['SibSp'], 
+        data['Parch'], data['Fare'],  data['Embarked']
+    ]
+    # Preprocess as needed (convert strings to numbers, etc.)
+    features[1] = 1 if features[1] == 'Male' else 0  # Example for 'Sex'
+    features[6] = {'S': 0, 'C': 1, 'Q': 2}[features[6]]  # Example for 'Embarked'
+    features=list(map(int,features))
+    print(features) #['Pclass', 'Sex', 'Age', 'SibSp', 'Parch', 'Fare', 'Embarked']
+    df=pd.DataFrame([features],columns=['Pclass', 'Sex', 'Age', 'SibSp', 'Parch', 'Fare', 'Embarked'])
+    print(df)
+    prediction = model.predict(df)  # Adjust as needed for your model
+    result = "Survived" if prediction[0] == 1 else "Did not survive"
     
+    return jsonify({'prediction': result})
+    #return render_template('index.html', prediction_text=f"Result: {result}")
 
-
-  return render_template('index.html', prediction_text=f"Result: {res_val}")
-
-if __name__ == "__main__":
-  app.run()
-##host='0.0.0.0',debug=False, port = 4566
+if __name__ == '__main__':
+    app.run(debug=True)

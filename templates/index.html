@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Passenger Data Input</title>
+    <title>TITANIC CLASSIFICATION</title>
     <style>
       body {
         font-family: Arial, sans-serif;
@@ -182,23 +182,39 @@
         <button type="submit">Submit</button>
       </form>
 
-      <div class="output-box" id="outputBox">{{prediction_text}}</div>
+      <div class="output-box" id="outputBox"></div>
     </div>
 
     <script>
       document
         .getElementById("dataForm")
-        .addEventListener("submit", function (e) {
+        .addEventListener("submit", async function (e) {
           e.preventDefault();
           const formData = new FormData(e.target);
-          const outputBox = document.getElementById("outputBox");
-          let output = "<h3>Submitted Data:</h3>";
+          const jsonData = {};
 
           formData.forEach((value, key) => {
-            output += `<p><strong>${key}:</strong> ${value}</p>`;
+            jsonData[key] = value;
           });
 
-          outputBox.innerHTML = output;
+          try {
+            const response = await fetch("/predict", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify(jsonData),
+            });
+
+            const result = await response.json();
+            document.getElementById(
+              "outputBox"
+            ).innerHTML = `<h3>Prediction:</h3><p>${result.prediction}</p>`;
+          } catch (error) {
+            console.error("Error:", error);
+            document.getElementById("outputBox").innerHTML =
+              "<p>An error occurred.</p>";
+          }
         });
     </script>
   </body>
