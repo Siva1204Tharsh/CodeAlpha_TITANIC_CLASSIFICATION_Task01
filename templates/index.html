@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Passenger Data Input</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        background: linear-gradient(to bottom right, #00416a, #e4e5e6);
+        color: #ffffff;
+      }
+
+      .container {
+        max-width: 600px;
+        margin: 20px auto;
+        background: #ffffff;
+        color: #333;
+        padding: 20px;
+        padding-right: 35px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        border-radius: 8px;
+      }
+
+      h1 {
+        text-align: center;
+        color: #00416a;
+      }
+
+      label {
+        display: block;
+        margin: 10px 0 5px;
+        font-weight: bold;
+      }
+
+      input,
+      select,
+      button,
+      textarea {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 15px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+      }
+
+      button {
+        background-color: #007bff;
+        color: white;
+        border: none;
+        cursor: pointer;
+      }
+
+      button:hover {
+        background-color: #0056b3;
+      }
+
+      .output-box {
+        border: 1px dashed #007bff;
+        background-color: #f9f9f9;
+        padding: 10px;
+        min-height: 50px;
+        color: #333;
+      }
+
+      @media (max-width: 600px) {
+        .container {
+          padding: 15px;
+        }
+
+        input,
+        select,
+        button,
+        textarea {
+          font-size: 14px;
+        }
+
+        h1 {
+          font-size: 20px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>TITANIC CLASSIFICATION</h1>
+      <form id="dataForm">
+        <label for="passengerId">Passenger ID</label>
+        <input
+          type="text"
+          id="passengerId"
+          name="PassengerId"
+          placeholder="Enter Passenger ID"
+          required
+        />
+
+        <label for="pclass">Passenger Class</label>
+        <select id="pclass" name="Pclass" required>
+          <option value="">Select Class</option>
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+        </select>
+
+        <label for="name">Name</label>
+        <input
+          type="text"
+          id="name"
+          name="Name"
+          placeholder="Enter Name"
+          required
+        />
+
+        <label for="sex">Sex</label>
+        <select id="sex" name="Sex" required>
+          <option value="">Select Sex</option>
+          <option value="Male">Male</option>
+          <option value="Female">Female</option>
+        </select>
+
+        <label for="age">Age</label>
+        <input
+          type="number"
+          id="age"
+          name="Age"
+          placeholder="Enter Age"
+          required
+        />
+
+        <label for="sibsp">SibSp</label>
+        <input
+          type="number"
+          id="sibsp"
+          name="SibSp"
+          placeholder="Number of Siblings/Spouses"
+        />
+
+        <label for="parch">Parch</label>
+        <input
+          type="number"
+          id="parch"
+          name="Parch"
+          placeholder="Number of Parents/Children"
+        />
+
+        <label for="ticket">Ticket</label>
+        <input
+          type="text"
+          id="ticket"
+          name="Ticket"
+          placeholder="Enter Ticket Number"
+        />
+
+        <label for="fare">Fare</label>
+        <input
+          type="number"
+          id="fare"
+          name="Fare"
+          placeholder="Enter Fare"
+          step="0.01"
+        />
+
+        <label for="cabin">Cabin</label>
+        <input
+          type="text"
+          id="cabin"
+          name="Cabin"
+          placeholder="Enter Cabin (e.g., C34)"
+        />
+
+        <label for="embarked">Embarked</label>
+        <select id="embarked" name="Embarked" required>
+          <option value="">Select Port</option>
+          <option value="S">S</option>
+          <option value="C">C</option>
+          <option value="Q">Q</option>
+        </select>
+
+        <button type="submit">Submit</button>
+      </form>
+
+      <div class="output-box" id="outputBox">{{prediction_text}}</div>
+    </div>
+
+    <script>
+      document
+        .getElementById("dataForm")
+        .addEventListener("submit", function (e) {
+          e.preventDefault();
+          const formData = new FormData(e.target);
+          const outputBox = document.getElementById("outputBox");
+          let output = "<h3>Submitted Data:</h3>";
+
+          formData.forEach((value, key) => {
+            output += `<p><strong>${key}:</strong> ${value}</p>`;
+          });
+
+          outputBox.innerHTML = output;
+        });
+    </script>
+  </body>
+</html>
